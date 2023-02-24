@@ -35,7 +35,7 @@ object Util {
         return monthArrayList
     }
 
-    fun getDates( year : String, month : String, context : Context) : Int{
+    fun getNumberOfDaysInMonth( year : String, month : String, context : Context) : Int{
         var days = 0
 
         if( month == context.getString(R.string.january) ||
@@ -62,5 +62,13 @@ object Util {
         return days
     }
 
+    fun calculateFirstDayInMonth( month : Int, year : String) : Int{
+        var y = year.toInt()
+        var m = month + 1
+        val d = 1
+        val t = arrayOf( 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4)
+        if (m < 3) y--
+        return ((y + y / 4 - y / 100 + y / 400 + t[m - 1] + d) % 7)
+    }
 
 }

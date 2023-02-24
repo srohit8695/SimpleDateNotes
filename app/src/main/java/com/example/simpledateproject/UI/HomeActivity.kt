@@ -16,9 +16,11 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var yearArrayList = ArrayList<String>()
     private var monthArrayList = ArrayList<String>()
+    private var dateArrayList = ArrayList<String>()
     private lateinit var dateAdapter: DateAdapter
     private var selectMonth = "January"
     private var selectYear = "1980"
+    private var monthInNumber = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class HomeActivity : AppCompatActivity() {
         binding.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectMonth = monthArrayList[position]
+                monthInNumber = position
                 initRecyclerView(selectYear, selectMonth)
             }
 
@@ -74,23 +77,41 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initRecyclerView( year: String, month: String){
 
-        var dateArrayList = ArrayList<String>()
-        var days = Util.getDates(year,month,this)
+        dateArrayList.clear()
+        addDaysOfMonth()
+        var numberOfDaysInMonth = Util.getNumberOfDaysInMonth(year,month,this)
+        val lastMonthDays = Util.calculateFirstDayInMonth(monthInNumber,year)
 
-        for(i in 1..days){
+        //Show empty space in 1st week of month if last month dates exist
+        for(i in 1..lastMonthDays){
+            dateArrayList.add(" ")
+        }
+
+        for(i in 1..numberOfDaysInMonth){
             dateArrayList.add(i.toString())
         }
 
-        dateAdapter = DateAdapter(
-            dateArrayList,
-            { position ->
-                val date = "${dateArrayList[position]}-${month}-${year}"
-                val intent = Intent(this, InsertActivity::class.java)
-                intent.putExtra("date", date)
-                startActivity(intent)
-            },
-        )
+        dateAdapter = DateAdapter(dateArrayList,) { position ->
+            val date = "${dateArrayList[position]}-${month}-${year}"
+            navigateToNextPage(date)
+        }
         binding.recyclerViewDate.adapter = dateAdapter
+    }
+
+    private fun navigateToNextPage(date : String){
+        val intent = Intent(this, InsertActivity::class.java)
+        intent.putExtra("date", date)
+        startActivity(intent)
+    }
+
+    private fun addDaysOfMonth(){
+        dateArrayList.add("Sun")
+        dateArrayList.add("Mon")
+        dateArrayList.add("Tue")
+        dateArrayList.add("Wed")
+        dateArrayList.add("Thu")
+        dateArrayList.add("Fri")
+        dateArrayList.add("Sat")
     }
 
 
