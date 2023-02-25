@@ -92,8 +92,12 @@ class HomeActivity : AppCompatActivity() {
         }
 
         dateAdapter = DateAdapter(dateArrayList,) { position ->
-            val date = "${dateArrayList[position]}-${month}-${year}"
-            navigateToNextPage(date)
+            /*This check is done to make sure we are passing
+            proper date and not days string and blank space*/
+            if (position>=(7+lastMonthDays)) {
+                val date = "${dateArrayList[position]}-${month}-${year}"
+                navigateToNextPage(date)
+            }
         }
         binding.recyclerViewDate.adapter = dateAdapter
     }
