@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import com.example.simpledateproject.adapter.DateAdapter
 import com.example.simpledateproject.databinding.ActivityMainBinding
 import com.example.simpledateproject.util.Util
+import com.example.simpledateproject.util.Util.selectedFromSpinner
 
 class HomeActivity : AppCompatActivity() {
 
@@ -19,7 +20,7 @@ class HomeActivity : AppCompatActivity() {
     private var dateArrayList = ArrayList<String>()
     private lateinit var dateAdapter: DateAdapter
     private var selectMonth = "January"
-    private var selectYear = "1980"
+    private var selectYear = "2023"
     private var monthInNumber = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +38,26 @@ class HomeActivity : AppCompatActivity() {
 
     private fun listener() {
 
+        binding.yearSpinner.selectedFromSpinner {
+            selectYear = yearArrayList[it]
+            initRecyclerView(selectYear, selectMonth)
+        }
+
+        binding.monthSpinner.selectedFromSpinner {
+            selectMonth = monthArrayList[it]
+            monthInNumber = it
+            initRecyclerView(selectYear, selectMonth)
+        }
+
+        /*
+        //this code gets crashed on screen rotation
         binding.yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 selectYear = yearArrayList[position]
                 initRecyclerView(selectYear, selectMonth)
             }
@@ -46,17 +65,21 @@ class HomeActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-
+        //this code gets crashed on screen rotation
         binding.monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 selectMonth = monthArrayList[position]
                 monthInNumber = position
                 initRecyclerView(selectYear, selectMonth)
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-
+        */
     }
 
     private fun initYearSpinner(){
